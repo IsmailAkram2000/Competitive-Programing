@@ -44,6 +44,12 @@ struct suffix_hash {
         return {a, b};
     }
  
+    pair <ll, ll> merge_hash(int i, int j, int k, int l) {
+        auto a = get_hash(i, j), b = get_hash(k, l);
+        return {((a.first * pow1[l - k + 1]) + b.first) % m1,
+                ((a.second * pow2[l - k + 1]) + b.second) % m2};
+    }
+ 
 }h;
  
 int main(){
