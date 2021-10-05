@@ -31,18 +31,18 @@ struct segment_tree{
 		v[cur] = v[2 * cur] + v[2 * cur + 1];
 	}  
  
-	ll sum(int l, int r) {
-		return sum(l, r, 1, 1, sz); 
+	ll query(int l, int r) {
+		return query(l, r, 1, 1, sz); 
 	}
  
-	ll sum(int l, int r, int cur, int lx, int rx) {
+	ll query(int l, int r, int cur, int lx, int rx) {
 		 if(lx > r || rx < l)	
 			 return 0;
 		 if(lx >= l && rx <= r) 
 			 return v[cur];
 		 int mid = (lx + rx) / 2;
-		 ll s1 = sum(l, r, 2 * cur, lx, mid);
-		 ll s2 = sum(l, r, 2 * cur + 1, mid + 1, rx);
+		 ll s1 = query(l, r, 2 * cur, lx, mid);
+		 ll s2 = query(l, r, 2 * cur + 1, mid + 1, rx);
 		 return s1 + s2;
 	}
  
