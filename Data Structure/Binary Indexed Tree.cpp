@@ -65,32 +65,33 @@ struct BIT_Multiset {
  
 }bit_ms;
  
-struct BIT{
-    ll N=1e18;
-    map<ll,ll>M;
- 
-    void add(ll i,ll val){
-        while(i<=N){
-            M[i]+=val;      i+=i&-i;
-        }
+struct BIT {
+    vector<int> tree;
+    int n;
+
+    void init(int sz) {
+        n = sz + 1;
+        tree.assign(n, 0);
     }
- 
-    ll get_sum(ll i){
-        ll res=0;
-        while(i){
-            res+=M[i];      i-=i&-i;
-        }
-        return res;
+
+    int sum(int r) {
+        int ret = 0;
+        for (; r >= 0; r = (r & (r + 1)) - 1)
+            ret += tree[r];
+        return ret;
     }
- 
-    ll get_sum_range(ll l,ll r){
-        return get_sum(r)-get_sum(l-1);
+
+    int sum(int l, int r) {
+        if(l > r)
+            return 0;
+        return sum(r) - sum(l - 1);
     }
- 
-    ll at(ll i){
-        return get_sum(i)-get_sum(i-1);
+
+    void add(int idx, int val) {
+        for (; idx < n; idx = idx | (idx + 1))
+            tree[idx] += val;
     }
- 
+
 }bit;
  
 int main(){
