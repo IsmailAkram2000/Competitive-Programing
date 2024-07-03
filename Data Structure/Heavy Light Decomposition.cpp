@@ -134,6 +134,10 @@ struct HLD {
             ans.push_back({pos[v] + 1, pos[u]});
         return ans;
     }
+
+    int get_node(int cur) {
+        return node[cur];
+    }
 };
 
 int main() {
