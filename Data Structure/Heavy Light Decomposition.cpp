@@ -2,66 +2,38 @@
 using namespace std;
 #define ll long long
 
-struct lazy_segment_tree {
+struct segment_tree {
     int sz;
-    vector<ll> v, lazy;
+    vector<ll> v;
 
     void init(int n) {
         sz = 1;
         while (sz < n)
             sz *= 2;
-        v.assign(2 * sz, 0);
-        lazy.assign(2 * sz, 0);
+        v.assign(2 * sz, 0);  // Use assign instead of resize and initialize with 0
     }
 
-    void push_down(int cur, int l, int r) {
-        if (lazy[cur] != 0) {
-            v[cur] += lazy[cur] * (r - l + 1); // Update the current node
-            if (l != r) {
-                lazy[2 * cur] += lazy[cur]; // Propagate to left child
-                lazy[2 * cur + 1] += lazy[cur]; // Propagate to right child
-            }
-            lazy[cur] = 0;
+    void set(int i, int x) {
+        i += sz - 1;  // Move to the leaf
+        v[i] = x;
+        while (i > 1) {
+            i /= 2;
+            v[i] = max(v[2 * i], v[2 * i + 1]);
         }
-    }
-
-    void set(int lx, int rx, int cur, int l, int r) {
-        push_down(cur, l, r);
-        if (lx > r || rx < l) return;
-        if (lx <= l && rx >= r) {
-            lazy[cur]++;
-            push_down(cur, l, r);
-            return;
-        }
-        int mid = (l + r) / 2;
-        set(lx, rx, 2 * cur, l, mid);
-        set(lx, rx, 2 * cur + 1, mid + 1, r);
-        v[cur] = v[2 * cur] + v[2 * cur + 1];
-    }
-
-    ll query(int lx, int rx, int cur, int l, int r) {
-        push_down(cur, l, r);
-        if (lx > r || rx < l) return 0;
-        if (lx <= l && rx >= r) return v[cur];
-        int mid = (l + r) / 2;
-        ll left = query(lx, rx, 2 * cur, l, mid);
-        ll right = query(lx, rx, 2 * cur + 1, mid + 1, r);
-        return left + right;
-    }
-
-    void set(int l, int r) {
-        if (l > r) swap(l, r);
-        set(l, r, 1, 1, sz);
     }
 
     ll query(int l, int r) {
-        if (l > r) swap(l, r);
-        return query(l, r, 1, 1, sz);
+        l += sz - 1;  // Move to the leaf
+        r += sz - 1;
+        ll res = 0;
+        while (l <= r) {
+            if (l % 2 == 1) res = max(res, v[l++]);
+            if (r % 2 == 0) res = max(res, v[r--]);
+            l /= 2;
+            r /= 2;
+        }
+        return res;
     }
-
-    int get_node(int cur) {
-        return node[cur];
-	}
 }seg;
 
 struct HLD {
