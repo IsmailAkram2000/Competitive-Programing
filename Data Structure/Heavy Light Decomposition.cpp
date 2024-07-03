@@ -58,6 +58,10 @@ struct lazy_segment_tree {
         if (l > r) swap(l, r);
         return query(l, r, 1, 1, sz);
     }
+
+    int get_node(int cur) {
+        return node[cur];
+	}
 }seg;
 
 struct HLD {
