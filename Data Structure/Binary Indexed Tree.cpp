@@ -93,6 +93,41 @@ struct BIT {
     }
 
 }bit;
+
+// range update
+struct FenwickTree {
+    vector<ll> tree1, tree2;
+    int n;
+
+    FenwickTree(int size) : n(size), tree1(size + 1, 0), tree2(size + 1, 0) {}
+
+    void add(vector<ll>& tree, int idx, ll value) {
+        for (; idx <= n; idx += idx & -idx)
+            tree[idx] += value;
+    }
+
+    ll sum(const vector<ll>& tree, int idx) const {
+        ll result = 0;
+        for (; idx > 0; idx -= idx & -idx)
+            result += tree[idx];
+        return result;
+    }
+
+    void rangeAdd(int left, int right, ll value) {
+        add(tree1, left, value);
+        add(tree1, right + 1, -value);
+        add(tree2, left, value * (left - 1));
+        add(tree2, right + 1, -value * right);
+    }
+
+    ll prefixSum(int idx) const {
+        return sum(tree1, idx) * idx - sum(tree2, idx);
+    }
+
+    ll rangeSum(int left, int right) const {
+        return prefixSum(right) - prefixSum(left - 1);
+    }
+};
  
 int main(){
  
